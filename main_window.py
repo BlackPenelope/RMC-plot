@@ -31,6 +31,29 @@ class MainWindow(QtWidgets.QMainWindow):
         FigureCanvas.updateGeometry(canvas)
 
         vbox.addWidget(canvas)
+        
+        widget = QtWidgets.QWidget(self)        
+        
+        hbox = QtWidgets.QHBoxLayout(widget)
+        
+        open_button = QtWidgets.QPushButton("Open")
+        open_button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        hbox.addWidget(open_button)
+        
+        clear_button = QtWidgets.QPushButton("Clear")
+        clear_button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        hbox.addWidget(clear_button)
+        
+        hbox.addStretch()
+                
+        widget.setLayout(hbox)
+        
+        vbox.addWidget(widget)
+        
+        button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | 
+                                                QtWidgets.QDialogButtonBox.Cancel)
+        
+        vbox.addWidget(button_box)
 
         self.setCentralWidget(self.central_widget)
         
