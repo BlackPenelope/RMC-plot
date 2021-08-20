@@ -44,7 +44,7 @@ class MainWindow(QtWidgets.QMainWindow):
         clear_button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         hbox.addWidget(clear_button)
         
-        hbox.addStretch()
+        hbox.addStretch() 
                 
         widget.setLayout(hbox)
         
