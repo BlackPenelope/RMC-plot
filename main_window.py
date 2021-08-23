@@ -32,7 +32,23 @@ class MainWindow(QtWidgets.QMainWindow):
 
         vbox.addWidget(canvas)
         
-        widget = QtWidgets.QWidget(self)        
+        # element 
+        widget = QtWidgets.QWidget(self)
+                
+        hbox = QtWidgets.QHBoxLayout(widget)
+        label = QtWidgets.QLabel("Elements : ", widget)
+        label.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        hbox.addWidget(label)
+        self.elem1_combo = QtWidgets.QComboBox(widget)                
+        self.elem2_combo = QtWidgets.QComboBox(widget)
+        hbox.addWidget(self.elem1_combo)
+        hbox.addWidget(self.elem2_combo)
+        
+        widget.setLayout(hbox)
+        
+        vbox.addWidget(widget)
+        
+        widget = QtWidgets.QWidget(self)
         
         hbox = QtWidgets.QHBoxLayout(widget)
         
