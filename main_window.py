@@ -6,6 +6,8 @@ from PyQt5 import QtCore, QtWidgets
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
+from dialog.element_view_dialog import ElementsViewDialog
+
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
@@ -44,15 +46,16 @@ class MainWindow(QtWidgets.QMainWindow):
         hbox.addWidget(self.elem1_combo)
         hbox.addWidget(self.elem2_combo)
         
-        widget.setLayout(hbox)
-        
+        widget.setLayout(hbox)        
         vbox.addWidget(widget)
         
-        widget = QtWidgets.QWidget(self)
-        
+        # open, clear button
+        widget = QtWidgets.QWidget(self)        
         hbox = QtWidgets.QHBoxLayout(widget)
         
         open_button = QtWidgets.QPushButton("Open")
+        open_button.clicked.connect(self.on_open)
+        
         open_button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         hbox.addWidget(open_button)
         
@@ -74,3 +77,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.central_widget)
         
         self.show()
+
+    def on_open(self):
+        dialog = ElementsViewDialog(self)
+        dialog.show()
+        
