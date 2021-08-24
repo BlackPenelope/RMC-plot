@@ -12,6 +12,19 @@ from PyQt5.QtWidgets import QLabel
 from PyQt5.QtCore import QSize
 from core.elements import ELEMENTS, SERIES
 
+COLORS = {
+    1: (0x99, 0xff, 0x99),  # Nonmetals
+    2: (0xc0, 0xff, 0xff),  # Noble gases
+    3: (0xff, 0x99, 0x99),  # Alkali metals
+    4: (0xff, 0xde, 0xad),  # Alkaline earth metals
+    5: (0xcc, 0xcc, 0x99),  # Metalloids
+    6: (0xff, 0xff, 0x99),  # Halogens
+    7: (0xcc, 0xcc, 0xcc),  # Poor metals
+    8: (0xff, 0xc0, 0xc0),  # Transition metals
+    9: (0xff, 0xbf, 0xff),  # Lanthanides
+    10: (0xff, 0x99, 0xcc),  # Actinides
+}
+
 class ElementsViewDialog(QDialog):
     
     def __init__(self, parent=None):
@@ -37,7 +50,8 @@ class ElementsViewDialog(QDialog):
         cols = len(self.layout.splitlines()[1].split())
         
         self.grid = QGridLayout()
-        self.grid.setSpacing(0)
+        #self.grid.setRowStretch(6, 4)
+        self.grid.setSpacing(2)
         self.buttons = list(range(0, len(ELEMENTS)))
         self.selected = -1
                 
@@ -61,6 +75,11 @@ class ElementsViewDialog(QDialog):
                 else:
                     ele = ELEMENTS[col]
                     button = QPushButton(ele.symbol, self)
+                    col = COLORS[ele.series]                    
+                    style = 'background-color: rgb({0}, {1}, {2}); font-weight: bold;'.format(col[0], col[1], col[2])
+                    button.setStyleSheet(style)                    
+                    #button.setStyleSheet('QPushButton {background-color: rgb(255,0,0); color: red;}')
+                    #button.setStyleSheet('QPushButton {background-color: #A3C1DA; color: red;}')
                     button.setFixedSize(QSize(button_size, button_size))                    
                     self.grid.addWidget(button, nrow, ncol)
                 
