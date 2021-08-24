@@ -51,9 +51,7 @@ class ElementsViewDialog(QDialog):
         
         self.grid = QGridLayout()
         #self.grid.setRowStretch(6, 4)
-        self.grid.setSpacing(2)
-        self.grid.setRowMinimumHeight(1, 50)
-        self.grid.setRowMinimumHeight(2, 150)
+        self.grid.setSpacing(2)        
         self.buttons = list(range(0, len(ELEMENTS)))
         self.selected = -1
                 
@@ -61,7 +59,7 @@ class ElementsViewDialog(QDialog):
         
         nrow = 0
         for row in self.layout.splitlines()[1:-1]:            
-            
+            self.grid.setRowMinimumHeight(nrow, 20)
             ncol = 0
             for col in row.split():                
                 if col == '.':               
