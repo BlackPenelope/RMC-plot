@@ -8,8 +8,8 @@ Created on Mon Aug 23 17:16:17 2021
 from PyQt5.QtWidgets import (QApplication, QDialog, QPushButton, 
                             QGridLayout, QVBoxLayout)
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QLabel
 from PyQt5.QtCore import QSize
+from PyQt5 import QtWidgets
 from core.elements import ELEMENTS, SERIES
 
 import platform
@@ -36,10 +36,11 @@ elif platform.system() == 'Darwin':
 elif platform.system() == 'Linux':
     SPACER = 28
 
-class ElementsViewDialog(QDialog):
+class ElementsViewDialog(QtWidgets.QDialog):
     
     def __init__(self, parent=None):
         super().__init__(parent)
+        
         
         self.setWindowTitle('Elements View')
         
@@ -59,7 +60,7 @@ class ElementsViewDialog(QDialog):
         
         rows = len(self.layout.splitlines()) - 2
         cols = len(self.layout.splitlines()[1].split())
-        
+                
         self.grid = QGridLayout()
         #self.grid.setRowStretch(6, 4)
         self.grid.setSpacing(2)        
@@ -78,14 +79,14 @@ class ElementsViewDialog(QDialog):
                     self.grid.setColumnMinimumWidth(ncol, button_size + 1)
                 
                 if col == '.':               
-                    label = QLabel('', self)
+                    label = QtWidgets.QLabel('', self)
                     label.setFixedSize(SPACER, SPACER)
                     self.grid.addWidget(label, nrow, ncol)                    
                     pass
                     #self.sizer.Add((SPACER, SPACER))
                 elif col[0] in '123456789*':
-                    static = QLabel(col,self)
-                    static.setFixedSize(SPACER, SPACER)
+                    static = QtWidgets.QLabel(col,self)
+                    #static.setFixedSize(SPACER, SPACER)
                     static.setAlignment(Qt.AlignBottom | Qt.AlignHCenter)
                     static.setStyleSheet('font-weight: bold;')
                     self.grid.addWidget(static, nrow, ncol)
@@ -102,7 +103,23 @@ class ElementsViewDialog(QDialog):
                 
                 ncol = ncol + 1
             nrow = nrow + 1
-        #vbox = QVBoxLayout()
-        #vbox.addLayout(self.grid)
+            
+        vbox = QVBoxLayout()
+        vbox.addLayout(self.grid)
         
-        self.setLayout(self.grid)
+        button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | 
+                                                QtWidgets.QDialogButtonBox.Cancel)
+        button_box.accepted.connect(self.okButtonClicked)
+        button_box.rejected.connect(self.cancelButtonClicked)
+        
+        vbox.addWidget(button_box)
+        
+        self.setLayout(vbox)
+        
+        
+    def okButtonClicked(self):
+        self.close()
+
+    def cancelButtonClicked(self):
+        self.close()
+        
