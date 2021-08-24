@@ -59,9 +59,13 @@ class ElementsViewDialog(QDialog):
         
         nrow = 0
         for row in self.layout.splitlines()[1:-1]:            
-            self.grid.setRowMinimumHeight(nrow, 20)
+            self.grid.setRowMinimumHeight(nrow, button_size + 1)
             ncol = 0
-            for col in row.split():                
+            for col in row.split():
+                
+                if nrow == 0:
+                    self.grid.setColumnMinimumWidth(ncol, button_size + 1)
+                
                 if col == '.':               
                     label = QLabel('', self)
                     label.setFixedSize(12, 12)
