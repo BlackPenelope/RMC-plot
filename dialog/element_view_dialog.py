@@ -12,6 +12,8 @@ from PyQt5.QtWidgets import QLabel
 from PyQt5.QtCore import QSize
 from core.elements import ELEMENTS, SERIES
 
+import platform
+
 COLORS = {
     1: (0x99, 0xff, 0x99),  # Nonmetals
     2: (0xc0, 0xff, 0xff),  # Noble gases
@@ -24,6 +26,15 @@ COLORS = {
     9: (0xff, 0xbf, 0xff),  # Lanthanides
     10: (0xff, 0x99, 0xcc),  # Actinides
 }
+
+
+SPACER = 12
+if platform.system() == 'Windows':
+    SPACER = 28
+elif platform.system() == 'Darwin':
+    SPACER = 12
+elif platform.system() == 'Linux':
+    SPACER = 28
 
 class ElementsViewDialog(QDialog):
     
@@ -68,12 +79,13 @@ class ElementsViewDialog(QDialog):
                 
                 if col == '.':               
                     label = QLabel('', self)
-                    label.setFixedSize(12, 12)
+                    label.setFixedSize(SPACER, SPACER)
                     self.grid.addWidget(label, nrow, ncol)                    
                     pass
                     #self.sizer.Add((SPACER, SPACER))
                 elif col[0] in '123456789*':
                     static = QLabel(col,self)
+                    static.setFixedSize(SPACER, SPACER)
                     static.setAlignment(Qt.AlignBottom | Qt.AlignHCenter)
                     static.setStyleSheet('font-weight: bold;')
                     self.grid.addWidget(static, nrow, ncol)
