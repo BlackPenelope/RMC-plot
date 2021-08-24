@@ -69,16 +69,20 @@ class MainWindow(QtWidgets.QMainWindow):
         
         vbox.addWidget(widget)
         
-        button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | 
-                                                QtWidgets.QDialogButtonBox.Cancel)
+        button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok)
+        
+        button_box.accepted.connect(self.accepted)        
         
         vbox.addWidget(button_box)
 
         self.setCentralWidget(self.central_widget)
         
         self.show()
+    
+    def accepted(self):
+        self.close()
 
     def on_open(self):        
         dialog = ElementsViewDialog(self)
-        dialog.show()
+        dialog.exec_()
         
