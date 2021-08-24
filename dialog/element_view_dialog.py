@@ -65,7 +65,9 @@ class ElementsViewDialog(QtWidgets.QDialog):
         #self.grid.setRowStretch(6, 4)
         self.grid.setSpacing(2)        
         self.buttons = list(range(0, len(ELEMENTS)))
-        self.selected = -1
+        self.selected_button = None
+        self.selected = ''
+        self.elem_button = {}
                 
         button_size = 30
         
@@ -93,6 +95,9 @@ class ElementsViewDialog(QtWidgets.QDialog):
                 else:
                     ele = ELEMENTS[col]
                     button = QPushButton(ele.symbol, self)
+                    button.setCheckable(True) # Toggle
+                    button.toggled.connect(self.button_toggled)                    
+                    self.elem_button[ele.symbol] = button
                     col = COLORS[ele.series]                    
                     style = 'background-color: rgb({0}, {1}, {2}); font-weight: bold;'.format(col[0], col[1], col[2])
                     button.setStyleSheet(style)
@@ -115,9 +120,18 @@ class ElementsViewDialog(QtWidgets.QDialog):
         vbox.addWidget(button_box)
         
         self.setLayout(vbox)
+    
+    def button_toggled(self, checked):
+        source = self.sender()
+        symbol = source.text()
         
+        if not self.selected_button is None:
+            self.selected_button.setChecked(False)
         
-    def okButtonClicked(self):
+        self.selected_button = self.elem_button[symbol]
+        self.selected = symbol
+        
+    def okButtonClicked(self):        
         self.close()
 
     def cancelButtonClicked(self):
