@@ -38,6 +38,14 @@ elif platform.system() == 'Linux':
 
 class ElementsViewDialog(QtWidgets.QDialog):
     
+    """
+    Elements View Dialog Class
+    
+    Attributes
+    ----------
+    selected : str
+        selected element symbol    
+    """
     def __init__(self, parent=None):
         super().__init__(parent)
         
@@ -84,8 +92,6 @@ class ElementsViewDialog(QtWidgets.QDialog):
                     label = QtWidgets.QLabel('', self)
                     label.setFixedSize(SPACER, SPACER)
                     self.grid.addWidget(label, nrow, ncol)                    
-                    pass
-                    #self.sizer.Add((SPACER, SPACER))
                 elif col[0] in '123456789*':
                     static = QtWidgets.QLabel(col,self)
                     #static.setFixedSize(SPACER, SPACER)
@@ -114,12 +120,13 @@ class ElementsViewDialog(QtWidgets.QDialog):
         
         button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | 
                                                 QtWidgets.QDialogButtonBox.Cancel)
-        button_box.accepted.connect(self.okButtonClicked)
-        button_box.rejected.connect(self.cancelButtonClicked)
+        button_box.accepted.connect(self.accepted)
+        button_box.rejected.connect(self.rejected)
         
         vbox.addWidget(button_box)
         
         self.setLayout(vbox)
+        self.show()
     
     def button_toggled(self, checked):
         source = self.sender()
@@ -131,9 +138,10 @@ class ElementsViewDialog(QtWidgets.QDialog):
         self.selected_button = self.elem_button[symbol]
         self.selected = symbol
         
-    def okButtonClicked(self):        
+    def accepted(self):        
         self.close()
 
-    def cancelButtonClicked(self):
+    def rejected(self):
+        self.selected = ''
         self.close()
         
