@@ -71,13 +71,14 @@ class ElementsViewDialog(QDialog):
                 elif col[0] in '123456789*':
                     static = QLabel(col,self)
                     static.setAlignment(Qt.AlignBottom | Qt.AlignHCenter)
+                    static.setStyleSheet('font-weight: bold;')
                     self.grid.addWidget(static, nrow, ncol)
                 else:
                     ele = ELEMENTS[col]
                     button = QPushButton(ele.symbol, self)
                     col = COLORS[ele.series]                    
                     style = 'background-color: rgb({0}, {1}, {2}); font-weight: bold;'.format(col[0], col[1], col[2])
-                    button.setStyleSheet(style)                    
+                    button.setStyleSheet(style)
                     #button.setStyleSheet('QPushButton {background-color: rgb(255,0,0); color: red;}')
                     #button.setStyleSheet('QPushButton {background-color: #A3C1DA; color: red;}')
                     button.setFixedSize(QSize(button_size, button_size))                    
