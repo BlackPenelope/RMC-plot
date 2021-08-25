@@ -70,22 +70,47 @@ class MainWindow(QtWidgets.QMainWindow):
             ele_str = '{0}({1}) - {2}'.format(ele.symbol, ele.number, ele.name)
             elemens.append(ele_str)            
                         
-        combo = QtWidgets.QComboBox()
+        combo = QtWidgets.QComboBox()      
         combo.addItems(elemens)
         hbox.addWidget(combo)
         
         hbox.addStretch()
                 
         widget.setLayout(hbox)
-        
         vbox.addWidget(widget)
         
         # Table
-        self.tabel = QtWidgets.QTableWidget()
-        vbox.addWidget(self.tabel)
+        self.table = QtWidgets.QTableWidget()   
+        headers = ['elem','select']
         
+        self.table.setColumnCount(2)
+        self.table.setColumnWidth(0, 150) # element column
+        self.table.setColumnWidth(1, 50)
+        self.table.setRowCount(3)
+        self.table.setHorizontalHeaderLabels(headers)
+        vbox.addWidget(self.table)
+        
+        for row in range(3):
+            
+            combo = QtWidgets.QComboBox()
+            combo.addItems(elemens)
+            
+            ''' change Align
+            combo.setEditable(True)
+            line_edit = combo.lineEdit()
+            line_edit.setAlignment(QtCore.Qt.AlignCenter)
+            line_edit.setReadOnly(True)
+            '''        
+            i = self.table.model().index(row, 0)
+            self.table.setIndexWidget(i, combo)
+            
+            button = QtWidgets.QPushButton('...')
+            button.clicked.connect(self.select_ele)
+            i = self.table.model().index(row, 1)
+            self.table.setIndexWidget(i, button)
+                
+        # Ok button
         button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok)
-        
         button_box.accepted.connect(self.accepted)        
         
         vbox.addWidget(button_box)
@@ -93,11 +118,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.central_widget)
         
         self.show()
+        
+    def select_ele(self):
+        dialog = ElementsViewDialog(self)
+        result = dialog.exec()
+        dialog.selected
+        
+        source = self.sender()
     
     def accepted(self):
         self.close()
 
     def on_open(self):        
-        dialog = ElementsViewDialog(self)
-        dialog.exec()
+        pass
         

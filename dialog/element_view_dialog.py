@@ -118,12 +118,12 @@ class ElementsViewDialog(QtWidgets.QDialog):
         vbox = QVBoxLayout()
         vbox.addLayout(self.grid)
         
-        button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | 
-                                                QtWidgets.QDialogButtonBox.Cancel)
-        button_box.accepted.connect(self.accepted)
-        button_box.rejected.connect(self.rejected)
+        self.button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok | 
+                                                QtWidgets.QDialogButtonBox.Cancel,self)
+        self.button_box.accepted.connect(self.accepted)
+        self.button_box.rejected.connect(self.rejected)
         
-        vbox.addWidget(button_box)
+        vbox.addWidget(self.button_box)
         
         self.setLayout(vbox)
         self.show()
@@ -141,7 +141,7 @@ class ElementsViewDialog(QtWidgets.QDialog):
     def accepted(self):        
         self.close()
 
-    def rejected(self):
+    def rejected(self):        
         self.selected = ''
         self.close()
         
