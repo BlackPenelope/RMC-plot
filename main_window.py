@@ -16,6 +16,11 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__()
 
         self.setWindowTitle("RMC plot")
+                
+        # dict {botton, row}
+        self.select_button = {}
+        # dict {row, combo}
+        self.select_combo = {}
         
         self.init_gui()
         
@@ -83,6 +88,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.table = QtWidgets.QTableWidget()   
         headers = ['elem','select']
         
+        #self.table.clicked.connect(self.view_clicked)
         self.table.setColumnCount(2)
         self.table.setColumnWidth(0, 150) # element column
         self.table.setColumnWidth(1, 50)
@@ -92,8 +98,10 @@ class MainWindow(QtWidgets.QMainWindow):
         
         for row in range(3):
             
-            combo = QtWidgets.QComboBox()
+            combo = QtWidgets.QComboBox()            
             combo.addItems(elemens)
+            
+            self.select_combo[row] = combo            
             
             ''' change Align
             combo.setEditable(True)
@@ -106,6 +114,7 @@ class MainWindow(QtWidgets.QMainWindow):
             
             button = QtWidgets.QPushButton('...')
             button.clicked.connect(self.select_ele)
+            self.select_button[button] = row
             i = self.table.model().index(row, 1)
             self.table.setIndexWidget(i, button)
                 
@@ -118,13 +127,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.central_widget)
         
         self.show()
+    
+    def view_clicked(self, clicked_index):
+        print(clicked_index.row())
         
     def select_ele(self):
         dialog = ElementsViewDialog(self)
         result = dialog.exec()
-        dialog.selected
+        ele = dialog.selected
         
-        source = self.sender()
+        button = self.sender()
+        row = self.select_button[button]        
+        
+        combo = self.select_combo[row]        
+        for i in range(combo.count()):
+            if ele + '(' in combo.itemText(i):
+                combo.setCurrentIndex(i)
     
     def accepted(self):
         self.close()
