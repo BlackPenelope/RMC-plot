@@ -8,6 +8,8 @@ from matplotlib.figure import Figure
 
 from dialog.element_view_dialog import ElementsViewDialog
 
+from core.elements import ELEMENTS
+
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
@@ -63,11 +65,24 @@ class MainWindow(QtWidgets.QMainWindow):
         clear_button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         hbox.addWidget(clear_button)
         
-        hbox.addStretch() 
+        elemens = []
+        for ele in ELEMENTS:
+            ele_str = '{0}({1}) - {2}'.format(ele.symbol, ele.number, ele.name)
+            elemens.append(ele_str)            
+                        
+        combo = QtWidgets.QComboBox()
+        combo.addItems(elemens)
+        hbox.addWidget(combo)
+        
+        hbox.addStretch()
                 
         widget.setLayout(hbox)
         
         vbox.addWidget(widget)
+        
+        # Table
+        self.tabel = QtWidgets.QTableWidget()
+        vbox.addWidget(self.tabel)
         
         button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok)
         
