@@ -10,10 +10,15 @@ import sys
 
 from PyQt5 import QtCore, QtWidgets
 from main_window import MainWindow
+import platform
 
 if __name__ == '__main__':
 
     app = QtWidgets.QApplication(sys.argv)
+    
+    if platform.system() == 'Windows':
+        app.setStyle(QtWidgets.QStyleFactory.create("Fusion"))
+    
     window = MainWindow()
         
     sys.exit(app.exec_())

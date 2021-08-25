@@ -84,5 +84,5 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def on_open(self):        
         dialog = ElementsViewDialog(self)
-        dialog.exec_()
+        dialog.exec()
         
