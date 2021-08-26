@@ -209,6 +209,10 @@ class MainWindow(QtWidgets.QMainWindow):
         for i in range(npar):
             self.canvas.axes.plot(self.results.r, gr[i])
         
+        self.canvas.axes.grid(linestyle='dotted')
+        self.canvas.axes.set_xlabel("Å")
+        self.canvas.axes.set_ylabel("intensity")
+        
         #l = [random.randint(0, 10) for i in range(4)]
         #self.canvas.axes.cla()
         #self.canvas.axes.plot([0, 1, 2, 3], l)        
