@@ -14,6 +14,7 @@ from core.rmc_configuration import RmcConfiguration
 import utils.grsq
 
 import random
+import numpy as np
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -175,12 +176,42 @@ class MainWindow(QtWidgets.QMainWindow):
         self.close()
         
     def on_calc(self):
+        '''
         l = [random.randint(0, 10) for i in range(4)]
         self.canvas.axes.cla()
         self.canvas.axes.plot([0, 1, 2, 3], l)
         
         l = [random.randint(0, 10) for i in range(4)]        
         self.canvas.axes.plot([0, 1, 2, 3], l)
+        self.canvas.draw()
+        '''
+        
+        dr = 0.05
+        ntypes = self.results.cfg.nmol_types
+        npar = int(ntypes*(ntypes+1)/2)
+        coeff = np.zeros(npar)
+        
+        n = 0
+        for i in range(ntypes):
+            for j in range(i, ntypes):
+                #ic = i*(2*ntypes-i-1)/2 + j                
+                coeff[n] = 1.0
+                n = n + 1
+
+        r, gr, total_gr = utils.grsq.calc_gr(self.results.cfg, dr, coeff)
+        self.results.r = r
+        self.results.gr = gr
+        self.results.total_gr = total_gr
+        
+        gr = self.results.gr.transpose()
+        
+        self.canvas.axes.cla()
+        for i in range(npar):
+            self.canvas.axes.plot(self.results.r, gr[i])
+        
+        #l = [random.randint(0, 10) for i in range(4)]
+        #self.canvas.axes.cla()
+        #self.canvas.axes.plot([0, 1, 2, 3], l)        
         self.canvas.draw()
 
     def on_open(self):        
