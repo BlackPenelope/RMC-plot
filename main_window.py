@@ -11,6 +11,9 @@ from dialog.element_view_dialog import ElementsViewDialog
 from core.elements import ELEMENTS
 from core.results import Results
 from core.rmc_configuration import RmcConfiguration
+import utils.grsq
+
+import random
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -39,16 +42,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
         vbox = QtWidgets.QVBoxLayout(self.central_widget)
         fig = Figure()
-        canvas = FigureCanvas(fig)
+        self.canvas = FigureCanvas(fig)
 
         # graph axes
-        canvas.axes = fig.add_subplot(111)
-        canvas.axes.plot([1, 2, 3], [2, 3, 4])
-        canvas.setParent(self.central_widget)
-        FigureCanvas.setSizePolicy(canvas, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        FigureCanvas.updateGeometry(canvas)
+        self.canvas.axes = fig.add_subplot(111)
+        self.canvas.axes.plot([1, 2, 3], [2, 3, 4])
+        self.canvas.setParent(self.central_widget)
+        FigureCanvas.setSizePolicy(self.canvas, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        FigureCanvas.updateGeometry(self.canvas)
 
-        vbox.addWidget(canvas)
+        vbox.addWidget(self.canvas)
         
         # element 
         widget = QtWidgets.QWidget(self)
@@ -65,12 +68,12 @@ class MainWindow(QtWidgets.QMainWindow):
         widget.setLayout(hbox)        
         vbox.addWidget(widget)
         
-        # open, clear button
+        # open, clear calc. button
         widget = QtWidgets.QWidget(self)        
         hbox = QtWidgets.QHBoxLayout(widget)
         
         open_button = QtWidgets.QPushButton("Open")
-        open_button.clicked.connect(self.on_open)        
+        open_button.clicked.connect(self.on_open)
         open_button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         hbox.addWidget(open_button)
         
@@ -79,6 +82,7 @@ class MainWindow(QtWidgets.QMainWindow):
         hbox.addWidget(clear_button)
                                 
         calc_button = QtWidgets.QPushButton("Calc.")
+        calc_button.clicked.connect(self.on_calc)
         calc_button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)        
         hbox.addWidget(calc_button)
         
@@ -109,7 +113,7 @@ class MainWindow(QtWidgets.QMainWindow):
         
         self.show()
         
-    def set_element(self):
+    def update(self):
         pass
     
     def set_table(self):
@@ -169,6 +173,15 @@ class MainWindow(QtWidgets.QMainWindow):
     
     def accepted(self):
         self.close()
+        
+    def on_calc(self):
+        l = [random.randint(0, 10) for i in range(4)]
+        self.canvas.axes.cla()
+        self.canvas.axes.plot([0, 1, 2, 3], l)
+        
+        l = [random.randint(0, 10) for i in range(4)]        
+        self.canvas.axes.plot([0, 1, 2, 3], l)
+        self.canvas.draw()
 
     def on_open(self):        
         cfg_file = QtWidgets.QFileDialog.getOpenFileName(self, 
