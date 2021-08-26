@@ -95,7 +95,7 @@ class ElementsViewDialog(QtWidgets.QDialog):
                 elif col[0] in '123456789*':
                     static = QtWidgets.QLabel(col,self)
                     #static.setFixedSize(SPACER, SPACER)
-                    static.setAlignment(Qt.AlignBottom | Qt.AlignHCenter)
+                    static.setAlignment(Qt.AlignBottom | Qt.AlignCenter)
                     static.setStyleSheet('font-weight: bold;')
                     self.grid.addWidget(static, nrow, ncol)
                 else:

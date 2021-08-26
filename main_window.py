@@ -9,6 +9,8 @@ from matplotlib.figure import Figure
 from dialog.element_view_dialog import ElementsViewDialog
 
 from core.elements import ELEMENTS
+from core.results import Results
+from core.rmc_configuration import RmcConfiguration
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -16,6 +18,7 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__()
 
         self.setWindowTitle("RMC plot")
+        self.results = Results()
                 
         # dict {botton, row}
         self.select_button = {}
@@ -23,6 +26,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.select_combo = {}
         
         self.init_gui()
+        
+        self.elemens = []
+        for ele in ELEMENTS:
+            ele_str = '{0}({1}) - {2}'.format(ele.symbol, ele.number, ele.name)
+            self.elemens.append(ele_str)            
+
         
     def init_gui(self):
 
@@ -61,23 +70,17 @@ class MainWindow(QtWidgets.QMainWindow):
         hbox = QtWidgets.QHBoxLayout(widget)
         
         open_button = QtWidgets.QPushButton("Open")
-        open_button.clicked.connect(self.on_open)
-        
+        open_button.clicked.connect(self.on_open)        
         open_button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         hbox.addWidget(open_button)
         
         clear_button = QtWidgets.QPushButton("Clear")
         clear_button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         hbox.addWidget(clear_button)
-        
-        elemens = []
-        for ele in ELEMENTS:
-            ele_str = '{0}({1}) - {2}'.format(ele.symbol, ele.number, ele.name)
-            elemens.append(ele_str)            
-                        
-        combo = QtWidgets.QComboBox()      
-        combo.addItems(elemens)
-        hbox.addWidget(combo)
+                                
+        calc_button = QtWidgets.QPushButton("Calc.")
+        calc_button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)        
+        hbox.addWidget(calc_button)
         
         hbox.addStretch()
                 
@@ -86,37 +89,15 @@ class MainWindow(QtWidgets.QMainWindow):
         
         # Table
         self.table = QtWidgets.QTableWidget()   
-        headers = ['elem','select']
+        headers = ['num.', 'elem','select']
         
         #self.table.clicked.connect(self.view_clicked)
-        self.table.setColumnCount(2)
-        self.table.setColumnWidth(0, 150) # element column
-        self.table.setColumnWidth(1, 50)
-        self.table.setRowCount(3)
+        self.table.setColumnCount(3)
+        self.table.setColumnWidth(0, 100) # element column
+        self.table.setColumnWidth(1, 150) # element column
+        self.table.setColumnWidth(2, 50)
         self.table.setHorizontalHeaderLabels(headers)
         vbox.addWidget(self.table)
-        
-        for row in range(3):
-            
-            combo = QtWidgets.QComboBox()            
-            combo.addItems(elemens)
-            
-            self.select_combo[row] = combo            
-            
-            ''' change Align
-            combo.setEditable(True)
-            line_edit = combo.lineEdit()
-            line_edit.setAlignment(QtCore.Qt.AlignCenter)
-            line_edit.setReadOnly(True)
-            '''        
-            i = self.table.model().index(row, 0)
-            self.table.setIndexWidget(i, combo)
-            
-            button = QtWidgets.QPushButton('...')
-            button.clicked.connect(self.select_ele)
-            self.select_button[button] = row
-            i = self.table.model().index(row, 1)
-            self.table.setIndexWidget(i, button)
                 
         # Ok button
         button_box = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Ok)
@@ -127,6 +108,48 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.central_widget)
         
         self.show()
+        
+    def set_element(self):
+        pass
+    
+    def set_table(self):
+        
+        cfg = self.results.cfg
+        #print(cfg.nmol_types)
+        
+        self.table.setRowCount(cfg.nmol_types)
+        for row in range(cfg.nmol_types):
+            
+            combo = QtWidgets.QComboBox()            
+            combo.addItems(self.elemens)
+            
+            self.select_combo[row] = combo            
+            
+            ''' change Align
+            combo.setEditable(True)
+            line_edit = combo.lineEdit()
+            line_edit.setAlignment(QtCore.Qt.AlignCenter)
+            line_edit.setReadOnly(True)
+            '''        
+            # number
+            i = self.table.model().index(row, 0)
+            item = QtWidgets.QTableWidgetItem()
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
+            item.setFlags(QtCore.Qt.ItemIsEnabled)
+            item.setText('{0}'.format(cfg.ni[row]))
+            self.table.setItem(row, 0, item)
+            
+            # element
+            i = self.table.model().index(row, 1)
+            self.table.setIndexWidget(i, combo)
+            
+            # select button
+            button = QtWidgets.QPushButton('...')
+            button.clicked.connect(self.select_ele)
+            self.select_button[button] = row
+            i = self.table.model().index(row, 2)
+            self.table.setIndexWidget(i, button)
+        
     
     def view_clicked(self, clicked_index):
         print(clicked_index.row())
@@ -148,5 +171,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.close()
 
     def on_open(self):        
-        pass
+        cfg_file = QtWidgets.QFileDialog.getOpenFileName(self, 
+                                                  'Select RMC file', 
+                                                  './',
+                                                  'All(*.*);;RMC file(.cfg)')
+        
+        self.results.path = cfg_file[0]
+        self.results.cfg = RmcConfiguration()
+        self.results.cfg.read(self.results.path)
+        
+        self.set_table()
         
